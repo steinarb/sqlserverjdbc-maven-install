@@ -1,0 +1,78 @@
+* What's this
+
+This directory contains a maven POM file, that will unpack a tar.gz file containing the Microsoft SQL Server JDBC driver, and install the unpacked contents in the local maven cache (aka. "the local maven repository"), so that Java applications can use it as a maven dependency.
+
+To use it:
+ 1. Clone this project from github
+    : git clone https://github.com/steinarb/sqlserverjdbc-maven-install.git
+ 2. Download the sqljdbc_4.2.6420.100_enu.tar.gz file from [[https://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=11774][Download the Microsoft JDBC Driver 6.0 (Preview), 4.2, 4.1, or 4.0 for SQL Server]], and put the downloaded file into the =sqlserverjdbc-maven-install=
+ 3. Use maven to install the zip file
+    : cd sqlserverjdbc-maven-install
+    : mvn clean install
+* Using the installed artifacts
+
+** Using the JDBC driver
+
+To use the JDBC driver itself, just add the jdbc.jar as a dependency to your project, like any normal jar dependency:
+#+BEGIN_SRC xml
+  <project>
+   <dependencies>
+    <dependency>
+     <groupId>com.microsoft.sqlserver.jdbc</groupId>
+     <artifactId>sqljdbc</artifactId>
+     <version>4.2</version>
+    </dependency>
+   </dependencies>
+  </project>
+#+END_SRC
+
+** Adding the 64-bit version of the jdbc_auth.dll to a windows service
+
+The following POM fragment will download the 64-bit version of the jdbc_auth.dll, into where a windows service created by the [[https://github.com/alexkasko/windows-service-installer][windows-service-installer]] maven plugin, will find it:
+#+BEGIN_SRC xml
+  <project>
+   <build>
+    <plugins>
+     <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-dependency-plugin</artifactId>
+      <version>2.10</version>
+      <executions>
+       <execution>
+        <id>copy-sqljdb-authdll-x64</id>
+        <phase>process-resources</phase>
+        <goals>
+         <goal>copy</goal>
+        </goals>
+        <configuration>
+         <artifactItems>
+          <artifactItem>
+           <groupId>com.microsoft.sqlserver.jdbc</groupId>
+           <artifactId>sqljdbc_auth_x64</artifactId>
+           <version>4.2</version>
+           <type>dll</type>
+           <outputDirectory>${project.build.directory}/izpack/dist/bin</outputDirectory>
+          </artifactItem>
+         </artifactItems>
+        </configuration>
+       </execution>
+      </executions>
+     </plugin>
+    </plugins>
+   </build>
+  </project>
+#+END_SRC
+
+The jdbc_auth.dll must be loadable by the executable, if the SQL Server JDBC driver is to use integrated authentication.
+
+* How does it work
+
+The flow through the maven life cycle phases, is:
+ - phase "initialize"
+   - the [[https://maven.apache.org/plugins/maven-install-plugin][maven-install-plugin]] installs the tarball in the maven local cache, so that the [[https://maven.apache.org/plugins/maven-dependency-plugin][maven-dependency-plugin]] can find it to unpack it
+ - phase "generate-sources"
+   - the [[https://maven.apache.org/plugins/maven-dependency-plugin][maven-dependency-plugin]] unpacks the sqljdbc tarball into the target/dependency/ directory
+ - phase "install"
+   - the [[https://maven.apache.org/plugins/maven-install-plugin][maven-install-plugin]] installs the various jar and dll files in the local maven cache
+
+
