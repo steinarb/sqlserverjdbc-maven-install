@@ -110,8 +110,9 @@
       <configuration>
        <file>${project.build.directory}/dependency/sqljdbc_4.2/enu/auth/x64/sqljdbc_auth.dll</file>
        <groupId>com.microsoft.sqlserver.jdbc</groupId>
-       <artifactId>sqljdbc_auth_x64</artifactId>
+       <artifactId>sqljdbc_auth</artifactId>
        <version>4.2</version>
+       <classifier>x64</classifier>
        <packaging>dll</packaging>
       </configuration>
       <goals>
@@ -124,8 +125,9 @@
       <configuration>
        <file>${project.build.directory}/dependency/sqljdbc_4.2/enu/auth/x86/sqljdbc_auth.dll</file>
        <groupId>com.microsoft.sqlserver.jdbc</groupId>
-       <artifactId>sqljdbc_auth_x86</artifactId>
+       <artifactId>sqljdbc_auth</artifactId>
        <version>4.2</version>
+       <classifier>x86</classifier>
        <packaging>dll</packaging>
       </configuration>
       <goals>
@@ -138,8 +140,9 @@
       <configuration>
        <file>${project.build.directory}/dependency/sqljdbc_4.2/enu/xa/x64/sqljdbc_xa.dll</file>
        <groupId>com.microsoft.sqlserver.jdbc</groupId>
-       <artifactId>sqljdbc_xa_x64</artifactId>
+       <artifactId>sqljdbc_xa</artifactId>
        <version>4.2</version>
+       <classifier>x64</classifier>
        <packaging>dll</packaging>
       </configuration>
       <goals>
@@ -152,8 +155,9 @@
       <configuration>
        <file>${project.build.directory}/dependency/sqljdbc_4.2/enu/xa/x86/sqljdbc_xa.dll</file>
        <groupId>com.microsoft.sqlserver.jdbc</groupId>
-       <artifactId>sqljdbc_xa_x86</artifactId>
+       <artifactId>sqljdbc_xa</artifactId>
        <version>4.2</version>
+       <classifier>x86</classifier>
        <packaging>dll</packaging>
       </configuration>
       <goals>
